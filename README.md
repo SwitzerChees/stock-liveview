@@ -38,6 +38,8 @@ Then acces the frontend at http://localhost:3000
 
 ### Environment Variables
 
-- `MONGODB_URL`: The URL of the MongoDB replica set (default: `mongodb://localhost:27017,localhost:27018,localhost:27019`)
+- `MONGODB_URL`: The URL of the MongoDB replica set (default: `mongodb://127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/?replicaSet=rs0`)
+- `MONGODB_DB`: The name of the database to use (default: `stockmarket`)
+- `MONGODB_COLLECTION`: The name of the collection to use (default: `stocks`)
 - `NODE_ENV`: The environment in which the application is running (default: `development`)
 - `PORT`: The port on which the application will run (default: `3000`)

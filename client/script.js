@@ -10,6 +10,9 @@ let prices = [];
 
 const renderPrices = () => {
   const pricesDiv = document.getElementById("prices");
+  if (prices.length === 0) {
+    return;
+  }
   pricesDiv.innerHTML = "";
   prices.forEach((price) => {
     const div = document.createElement("div");

@@ -5,7 +5,7 @@ let client;
 const initializeMongoDB = async () => {
   const url =
     process.env.MONGODB_URL ||
-    "mongodb://localhost:27017,localhost:27018,localhost:27019";
+    "mongodb://127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/?replicaSet=rs0";
   client = new MongoClient(url);
   console.log(`Connecting to MongoDB at ${url}`);
   await client.connect();

@@ -6,15 +6,14 @@ const sockets = [];
 const initializeWebsocketServer = (server) => {
   const websocketServer = new WebSocket.Server({ server });
   websocketServer.on("connection", onConnection);
-  broadcastPrices();
+  setInterval(broadcastPrices, 500);
 };
 
 const broadcastPrices = async () => {
-  if (sockets.length > 0) {
-    const prices = await getLatestPrices();
-    sockets.forEach((socket) => sendPrices(socket, prices));
-  }
-  setTimeout(broadcastPrices, 500);
+  if (sockets.length === 0) return;
+  const prices = await getLatestPrices();
+  if (prices.length === 0) return;
+  sockets.forEach((socket) => sendPrices(socket, prices));
 };
 
 const onConnection = async (ws) => {
@@ -25,9 +24,11 @@ const onConnection = async (ws) => {
 
 const getLatestPrices = async () => {
   const client = getMongoClient();
+  const dbName = process.env.MONGODB_DB || "stockmarket";
+  const collectionName = process.env.MONGODB_COLLECTION || "stocks";
   const result = await client
-    .db("stockmarket")
-    .collection("prices")
+    .db(dbName)
+    .collection(collectionName)
     .aggregate([
       {
         $sort: {
@@ -42,7 +43,9 @@ const getLatestPrices = async () => {
       },
     ])
     .toArray();
-  return result.map((entry) => entry.latestEntry);
+  const companies = result.map((entry) => entry.latestEntry);
+  companies.sort((a, b) => a.company.localeCompare(b.company));
+  return companies;
 };
 
 const sendPrices = async (ws, prices) => {
